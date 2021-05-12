@@ -1,5 +1,6 @@
 import {
   Create,
+  Edit,
   SimpleForm,
   TextInput,
   List,
@@ -58,5 +59,32 @@ export const AddFont = (props) => {
         </FileInput>
       </SimpleForm>
     </Create>
+  );
+};
+
+export const EditFont = (props) => {
+  const options = [{ name: 'Free' }, { name: 'Premium' }];
+  return (
+    <Edit {...props}>
+      <SimpleForm>
+        <TextInput source="name" required />
+        <TextInput source="searchName" required />
+        <TextInput
+          source="description"
+          options={{ multiline: true }}
+          required
+        />
+        <TextInput source="thumbUrl" />
+        <TextInput source="charMapUrl" />
+        <SelectInput
+          source="type"
+          choices={options}
+          optionText="name"
+          optionValue="name"
+          required
+        />
+        <TextInput source="price" required />
+      </SimpleForm>
+    </Edit>
   );
 };
