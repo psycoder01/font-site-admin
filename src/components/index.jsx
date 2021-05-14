@@ -1,15 +1,23 @@
 import {
-  Create,
   Edit,
-  SimpleForm,
-  TextInput,
   List,
+  Create,
   Datagrid,
+  useLogin,
+  TextInput,
   TextField,
-  SelectInput,
   FileInput,
   FileField,
+  useNotify,
+  SimpleForm,
+  SelectInput,
+  Notification,
+  defaultTheme,
 } from 'react-admin';
+import { useState } from 'react';
+import { TextField as Input } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
 
 export const FontsList = (props) => {
   return (
@@ -86,5 +94,42 @@ export const EditFont = (props) => {
         <TextInput source="price" required />
       </SimpleForm>
     </Edit>
+  );
+};
+
+export const LoginPage = ({ theme }) => {
+  const [code, setCode] = useState('');
+  const login = useLogin();
+  const notify = useNotify();
+  const submit = (e) => {
+    e.preventDefault();
+    // will call authProvider.login({ email, password })
+    login({ code }).catch(() => notify('Something wrong!'));
+  };
+
+  return (
+    <ThemeProvider theme={createMuiTheme(defaultTheme)}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <form onSubmit={submit}>
+          <Input
+            name="code"
+            type="password"
+            value={code}
+            required
+            label="Code"
+            variant="outlined"
+            onChange={(e) => setCode(e.target.value)}
+          />
+        </form>
+      </div>
+      <Notification />
+    </ThemeProvider>
   );
 };

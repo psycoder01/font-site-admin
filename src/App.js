@@ -1,14 +1,15 @@
 import axios from 'axios';
 import { Admin, Resource } from 'react-admin';
 
-import { FontsList, AddFont, EditFont } from './components';
+import { LoginPage, FontsList, AddFont, EditFont } from './components';
 
 const uri = process.env.REACT_APP_SERVER_URI || '';
+const authUri = process.env.REACT_APP_AUTH_URI || '';
 
 function App() {
   const dataProvider = {
     getList: async () => {
-      const resp = await axios.get(`${uri}/fontsList`);
+      const resp = await network.get(`${uri}/fontsList`);
       const { data } = resp;
       return data;
     },
@@ -56,8 +57,30 @@ function App() {
     },
   };
 
+  const authProvider = {
+    // authentication
+    login: async (params) => {
+      const resp = await axios.post(`${authUri}/login`, params);
+      await localStorage.setItem('token', resp.data);
+      return resp;
+    },
+    checkError: (error) => Promise.resolve(),
+    checkAuth: (params) => Promise.resolve(),
+    logout: () => {
+      localStorage.removeItem('token');
+      return Promise.resolve();
+    },
+    getIdentity: () => Promise.resolve(),
+    //authorization
+    getPermissions: (params) => Promise.resolve(),
+  };
+
   return (
-    <Admin dataProvider={dataProvider}>
+    <Admin
+      loginPage={LoginPage}
+      authProvider={authProvider}
+      dataProvider={dataProvider}
+    >
       <Resource
         name="fontsList"
         list={FontsList}
@@ -69,3 +92,10 @@ function App() {
 }
 
 export default App;
+
+const token = localStorage.getItem('token');
+const network = axios.create({
+  headers: {
+    Authorization: `${localStorage.getItem('token')}`,
+  },
+});
