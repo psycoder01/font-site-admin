@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Admin, Resource } from 'react-admin';
 
+import { network, setToken, setHeaders } from './api';
 import { LoginPage, FontsList, AddFont, EditFont } from './components';
 
 const uri = process.env.REACT_APP_SERVER_URI || '';
@@ -14,9 +15,8 @@ function App() {
       return data;
     },
     getOne: async (resource, params) => {
-      console.log(params);
       const { id } = params;
-      const resp = await axios.get(`${uri}/id=${id}`);
+      const resp = await network.get(`${uri}/id=${id}`);
       const { data } = resp;
       return data;
     },
@@ -27,31 +27,31 @@ function App() {
       formData.append('font', params.data.files.rawFile);
 
       if (params.data.files) {
-        await axios.post(`${uri}/admin/uploadFont`, formData, {
+        await network.post(`${uri}/admin/uploadFont`, formData, {
           headers: {
             'Content-Type': 'application.ttf',
           },
         });
       }
       delete params.data.files;
-      const resp = await axios.post(`${uri}/admin/addFont`, params.data);
+      const resp = await network.post(`${uri}/admin/addFont`, params.data);
       return resp.data;
     },
     update: async (resource, params) => {
       const { id } = params.data;
-      await axios.post(`${uri}/admin/updateFont/${id}`, params.data);
+      await network.post(`${uri}/admin/updateFont/${id}`, params.data);
       return { data: params.data };
     },
     //updateMany: (resource, params) => Promise,
     delete: async (resource, params) => {
       const { id } = params;
-      const resp = await axios.delete(`${uri}/admin/delFont/${id}`);
+      const resp = await network.delete(`${uri}/admin/delFont/${id}`);
       return resp.data;
     },
     deleteMany: async (resource, params) => {
       const { ids } = params;
       const resp = await Promise.all(
-        ids.map((id) => axios.delete(`${uri}/admin/delFont/${id}`)),
+        ids.map((id) => network.delete(`${uri}/admin/delFont/${id}`)),
       );
       return { data: resp };
     },
@@ -61,11 +61,15 @@ function App() {
     // authentication
     login: async (params) => {
       const resp = await axios.post(`${authUri}/login`, params);
-      await localStorage.setItem('token', resp.data);
-      return resp;
+      // setting token in request headers
+      const token = resp.data;
+      setHeaders('Authorization', token);
+      setToken(token);
+      return Promise.resolve();
     },
     checkError: (error) => Promise.resolve(),
-    checkAuth: (params) => Promise.resolve(),
+    checkAuth: (params) =>
+      localStorage.getItem('token') ? Promise.resolve() : Promise.reject(),
     logout: () => {
       localStorage.removeItem('token');
       return Promise.resolve();
@@ -92,10 +96,3 @@ function App() {
 }
 
 export default App;
-
-const token = localStorage.getItem('token');
-const network = axios.create({
-  headers: {
-    Authorization: `${localStorage.getItem('token')}`,
-  },
-});
