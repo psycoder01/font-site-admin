@@ -30,6 +30,7 @@ export const FontsList = (props) => {
         <TextField source="downloads" />
         <TextField source="thumbUrl" />
         <TextField source="charMapUrl" />
+        <TextField source="language" />
         <TextField source="rating" />
         <TextField source="type" />
         <TextField source="price" />
@@ -54,6 +55,7 @@ export const AddFont = (props) => {
         />
         <TextInput source="thumbUrl" />
         <TextInput source="charMapUrl" />
+        <TextInput source="language" />
         <SelectInput
           source="type"
           choices={options}
@@ -84,6 +86,7 @@ export const EditFont = (props) => {
         />
         <TextInput source="thumbUrl" />
         <TextInput source="charMapUrl" />
+        <TextInput source="language" />
         <SelectInput
           source="type"
           choices={options}
