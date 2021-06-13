@@ -28,8 +28,7 @@ export const FontsList = (props) => {
         <TextField source="searchName" />
         <TextField source="description" />
         <TextField source="downloads" />
-        <TextField source="thumbUrl" />
-        <TextField source="charMapUrl" />
+        <TextField source="thumbChars" />
         <TextField source="language" />
         <TextField source="rating" />
         <TextField source="type" />
@@ -53,8 +52,7 @@ export const AddFont = (props) => {
           options={{ multiline: true }}
           required
         />
-        <TextInput source="thumbUrl" />
-        <TextInput source="charMapUrl" />
+        <TextInput source="thumbChars" />
         <TextInput source="language" />
         <SelectInput
           source="type"
@@ -84,8 +82,7 @@ export const EditFont = (props) => {
           options={{ multiline: true }}
           required
         />
-        <TextInput source="thumbUrl" />
-        <TextInput source="charMapUrl" />
+        <TextInput source="thumbChars" />
         <TextInput source="language" />
         <SelectInput
           source="type"
