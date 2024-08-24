@@ -4,8 +4,8 @@ import { Admin, Resource } from 'react-admin';
 import { network, setToken, setHeaders } from './api';
 import { LoginPage, FontsList, AddFont, EditFont } from './components';
 
-const uri = process.env.REACT_APP_SERVER_URI || '';
-const authUri = process.env.REACT_APP_AUTH_URI || '';
+const uri = process.env.SERVER_URI || '';
+const authUri = process.env.AUTH_URI || '';
 
 function App() {
   const dataProvider = {
